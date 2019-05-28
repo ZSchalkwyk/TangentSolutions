@@ -1,0 +1,17 @@
+version: '3.6'
+networks:
+  demo:
+    name: demo
+    driver: bridge
+services:
+  demo:
+    container_name: demo
+    image: demo
+    build: .
+    tty: true
+    ports:
+      - 4201:8080
+    volumes:
+      - ./:/app
+    networks:
+      - demo

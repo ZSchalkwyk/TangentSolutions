@@ -1,0 +1,4 @@
+.vscode
+app.log
+.mypy_cache
+.pytest_cache
