@@ -1,0 +1,571 @@
+{
+	"info": {
+		"_postman_id": "b3d6f762-626f-4567-adb8-024550ba539b",
+		"name": "Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Init Seed Employees",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c5a02360-fd06-45c3-8906-a8100bc173ba",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.not.be.error; \r",
+							"    pm.response.to.have.jsonBody('message'); \r",
+							"    pm.response.to.not.have.jsonBody(\"error\"); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave - End date before start date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b62b6cbc-7319-4d70-8696-00401a8b2f51",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.be.error; \r",
+							"    pm.response.to.have.body('{\"message\": \"end_date cannot be earlier than the start_date.\"}'); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"1\",\n\t\"start_date\": \"2019-02-02\",\n\t\"end_date\": \"2018-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave - End date invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1de90b01-2f48-4788-b9a3-0e3b5f6f900e",
+						"exec": [
+							"pm.test(\"response is error\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.be.error; \r",
+							"    pm.response.to.have.body('{\"message\": \"an invalid end_date was supplied.\"}'); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"1\",\n\t\"start_date\": \"2019-02-02\",\n\t\"end_date\": \"2018-ads02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave - Start date invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2efff451-b459-4dd3-8ce4-78a7a89dc013",
+						"exec": [
+							"pm.test(\"response is error\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.be.error; \r",
+							"    pm.response.to.have.body('{\"message\": \"an invalid start_date was supplied.\"}'); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"1\",\n\t\"start_date\": \"2019-02-asd\",\n\t\"end_date\": \"2019-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave -Employee_pk not supplied",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2ffea68-f242-4400-bf75-d821e611959d",
+						"exec": [
+							"pm.test(\"response is error\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.be.error; \r",
+							"    pm.response.to.have.body('{\"message\": \"employee_pk is required.\"}'); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"\",\n\t\"start_date\": \"2019-02-asd\",\n\t\"end_date\": \"2019-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave -Employee_pk not supplied 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e36970b4-f0e2-49b0-bd4e-4b5a05fcb8a8",
+						"exec": [
+							"pm.test(\"response is error\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.be.error; \r",
+							"    pm.response.to.have.body('{\"message\": \"employee_pk is required.\"}'); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"start_date\": \"2019-02-asd\",\n\t\"end_date\": \"2019-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave -Employee_pk invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ded6394-a5eb-48d3-b121-12097ebaf0a8",
+						"exec": [
+							"pm.test(\"response is error\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"call returns what is expected\", function () { \r",
+							"    pm.response.to.be.error; \r",
+							"    pm.response.to.have.body('{\"message\": \"invalid employee_pk supplied.\"}'); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"employee_pk\": \"sadas\",\r\n\t\"start_date\": \"2019-02-02\",\r\n\t\"end_date\": \"2019-02-03\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave -Employee not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e0e3bf3-0bd0-457a-bf53-7bcc3348e912",
+						"exec": [
+							"pm.test(\"response is error\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"call returns what is expected\", function () { ",
+							"    pm.response.to.be.error; ",
+							"    pm.response.to.have.body('{\"message\": \"employee could not be found.\"}'); ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"100\",\n\t\"start_date\": \"2019-02-02\",\n\t\"end_date\": \"2019-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave - Start date not supplied",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd946063-f84b-445c-9c38-4a82968ae481",
+						"exec": [
+							"pm.test(\"response is error\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"call returns what is expected\", function () { ",
+							"    pm.response.to.be.error; ",
+							"    pm.response.to.have.body('{\"message\": \"start_date is required.\"}'); ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"100\",\n\t\"start_date\": \"\",\n\t\"end_date\": \"2019-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit leave - End date not supplied",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "483e6160-1332-4aa7-b906-dfecddb122e6",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"call returns what is expected\", function () { ",
+							"    pm.response.to.be.error; ",
+							"    pm.response.to.have.body('{\"message\": \"end_date is required.\"}'); ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"100\",\n\t\"start_date\": \"2019-02-03\",\n\t\"end_date\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully submit leave",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef5a72d3-0a1a-4316-8236-8b1c8d98c9a6",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"call returns what is expected\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.have.body('{\"message\": \"your leave was successfully submitted! Thank you!\"}'); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"employee_pk\": \"1\",\n\t\"start_date\": \"2019-02-02\",\n\t\"end_date\": \"2019-02-03\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4201/leave",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4201",
+					"path": [
+						"leave"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

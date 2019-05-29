@@ -11,7 +11,7 @@ from sqlalchemy import (
 
 @hug.get("/")
 def home(request, response, **kwargs):
-
+    """Call seeds the project as well as gives a (It works) effect."""
     database_session = db.get_session()
     employees_count = (
         database_session.query(db.Employee).count()
@@ -27,24 +27,28 @@ def home(request, response, **kwargs):
             )
             database_session.add(employee)
             database_session.commit()
+        return {"message": "Seeded DB."}
 
-    return "Hi"
+    return {"message": "It's running."}
 
 
 @hug.post("/leave/")
 def post(request, response, **kwargs):
-
+    """Call submits leave."""
+    # Create placeholder vars
     response.status = HTTP_400
     start_date_obj = None
     end_date_obj = None
     database_session = None
     employee = None
 
+    # Check that employee_pk is passed and not empty
     if "employee_pk" not in kwargs:
         return {"message": "employee_pk is required."}
     elif kwargs["employee_pk"] == "":
         return {"message": "employee_pk is required."}
 
+    # Check that start_date is passed, not empty and a valid date
     if "start_date" not in kwargs:
         return {"message": "start_date is required."}
     elif kwargs["start_date"] == "":
@@ -55,28 +59,35 @@ def post(request, response, **kwargs):
         except:
             return {"message": "an invalid start_date was supplied."}
 
+    # Check that end_date is passed, not empty and a valid date
     if "end_date" not in kwargs:
-        return "end_date is required"
+        return {"message": "end_date is required."}
     elif kwargs["end_date"] == "":
-        return "end_date is required"
+        return {"message": "end_date is required."}
     else:
         try:
             end_date_obj = parse(kwargs["end_date"]).date()
         except:
             return {"message": "an invalid end_date was supplied."}
 
+    # Check that end_date is later thanthe start_date
     if end_date_obj < start_date_obj:
-        return {"end_date cannot be earlier than the start_date."}
+        return {"message": "end_date cannot be earlier than the start_date."}
 
+    # Find the correct employee and return an error if not found
     employee_key = kwargs["employee_pk"]
     if employee_key.isdigit():
         database_session = db.get_session()
         employee = database_session.query(db.Employee).get(employee_key)
-        if employee is None:
+        if employee == None:
             return {"message": "employee could not be found."}
+    else:
+        return {"message": "invalid employee_pk supplied."}
 
+    # calculate date delta
     date_delta = (end_date_obj - start_date_obj).days + 1
 
+    # Submit the leave and return an error if leave could not be submitted
     try:
         leave = db.Leave(
             start_date=start_date_obj,
@@ -91,6 +102,7 @@ def post(request, response, **kwargs):
         print(e)
         return {"message": "an error occurred while submitting leave, please try again later."}
 
+    # return a valid response indicating success if all went well
     response.status = HTTP_200
     return {"message": "your leave was successfully submitted! Thank you!"}
 
